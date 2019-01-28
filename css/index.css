@@ -1,0 +1,55 @@
+:root {
+    --header-height: 65px;
+    --nav-width: 240px;
+}
+
+* {
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+#x-header {
+    top: 0;
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    height: var(--header-height);
+}
+
+#x-main {
+    position: fixed;
+    right: 0;
+    width: calc(100vw - var(--nav-width));
+    top: var(--header-height);
+    height: calc(100vh - var(--header-height));
+}
+
+/* 导航目录 */
+#x-nav {
+    width: var(--nav-width);
+    position: fixed;
+    left: 0;
+    top: var(--header-height);
+    height: calc(100vh - var(--header-height));
+}
+
+#x-nav>* {
+    padding: .5rem 1rem;
+}
+
+#x-nav ul {
+    margin: 0;
+    padding: 0;
+}
+
+#x-nav li.nav-item {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+#x-nav ul.sub-nav {
+    flex: 1;
+}
+#x-nav li.sub-item {}

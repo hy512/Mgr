@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+        body > div {
+            margin: 5px 5px;
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="./libs/d3.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        let color = [];
+        for (let r = 0; r < 256; r += 20) {
+            for (let g = 0; g < 256; g += 20) {
+                for (let b = 0; b < 256; b += 20) {
+                    color.push(`rgb(${r}, ${g}, ${b})`);
+                }
+            }
+        }
+
+        let div = d3.select("body").selectAll("div").data(color);
+        div.exit().remove();
+        div.merge(div.enter().append("div"))
+            .style("background-color", d => d);
+    </script>
+</body>
+
+</html>
