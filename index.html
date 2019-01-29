@@ -52,6 +52,65 @@
 
         </header>
     </div>
+    <script src="./libs/jquery-3.3.1.min.js" charset="utf-8"></script>
+    <script src="./libs/d3.js" charset="utf-8"></script>
+    <script src="./libs/axios.min.js" charset="utf-8"></script>
+    <script src="./js/data.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        (function() {
+            "use strict"
+
+            // 获取所有栏目数据
+            d.columns().then(function(c) {
+                // console.log(c);
+                createColumn(document.body.querySelector("#x-nav > ul"), c);
+            });
+
+            // 在指定 ul 节点下插入 li 列表
+            function createColumn(ul, data) {
+                console.log([].concat(data))
+                // 遍历数据, 将下级列表展开, 以便适应 d3 渲染布局
+                for (var i = 0; i < data.length; i++) {
+                    console.log(i)
+                    if (data[i].hasOwnProperty("columns")) {
+                        console.log(JSON.stringify(data))
+                        console.log(data[i])
+                        data.splice(++i, 0, data[i].columns);
+                    }
+                }
+                console.log([].concat(data))
+                if (true) return;
+
+                // 移除当前 ul 下所有其它类型节点
+                d3.selectAll(ul.children).filter("*:not(li)").remove();
+                // 绑定所有 li 节点
+                var li = d3.selectAll(ul.children).data(data);
+                li.exit().remove();
+                var span = li.merge(li.enter().append("li"))
+                    .attr("class", function(d, index, nodes) {
+                        // return "nav-item nav-link" + d.
+                        return "nav-item " + (item.hasOwnProperty("columns") ? "sub-item" : "nav-link");
+                    })
+                    .each(function(d, index, nodes) {
+                        // 干掉所有其它节点
+                        d3.selectAll(this.children).filter("*:not(span)").remove();
+                        console.log(d)
+                    })
+                    .selectAll("span").data(function(d, index, nodes) {
+                        return d;
+                    });
+                span.exit().remove();
+                span.merge(span.enter().append("span"))
+                    .text(function(d, index, nodes) {
+                        console.log(d)
+                        return index ? "" : d;
+                    })
+                    .attr("class", function(d, index, nodes) {
+                        return index ? d : "";
+                    });
+            }
+        })();
+    </script>
 </body>
 
 </html>

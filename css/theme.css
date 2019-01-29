@@ -5,15 +5,21 @@
 
 #x-nav {
     background: var(--nav-background);
-    box-shadow: .5rem 0 1rem rgba(0, 0, 0, .25);
+    -webkit-box-shadow: .5rem 0 1rem rgba(0, 0, 0, .25);
+            box-shadow: .5rem 0 1rem rgba(0, 0, 0, .25);
 }
 
 #x-nav {
     color: white;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
 
 #x-nav .nav-link, #x-nav .nav-item {
     background-color: rgb(60, 160, 0);
+    -webkit-transition: border-bottom .1s ease-in, background-color .3s ease-in 0s;
     transition: border-bottom .1s ease-in, background-color .3s ease-in 0s;
     border-bottom: 1px solid rgb(20, 60, 0);
     padding: 0.8rem 1rem;
