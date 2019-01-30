@@ -30,7 +30,7 @@
                     if (resp.status !== 200) {
                         var error = new Error("请求失败 !");
                         error.detail = {
-                            status:  resp.status,
+                            status: resp.status,
                             statusText: resp.statusText,
                             config: resp.config,
                             data: resp.data,
@@ -38,7 +38,9 @@
                         throw error;
                     }
                     return resp.data;
-                });
+                })
+                // 改变数据格式
+                // .then(process.columns);
         },
     };
     // 绑定请求对象到 window
@@ -48,4 +50,18 @@
         writable: false,
         value: server
     });
+
+    // 数据处理对象
+    var process = {
+        columns: function(data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].hasOwnProperty("columns")) {
+                    data.splice(i + 1, 0, process.columns(data[i].columns));
+                    i++;
+                }
+
+            }
+            return [data];
+        }
+    }
 })(window, document);

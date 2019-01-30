@@ -1,40 +1,88 @@
 #x-nav {
-    --nav-background:linear-gradient(to bottom, rgb(0, 140, 0), rgb(20, 80, 20));
-    /* rgb(20, 80, 20); */
+    --nav-background: linear-gradient(to bottom, rgb(0, 140, 0), rgb(20, 80, 20));
+    --nav-item-background: rgb(60, 160, 0);
+    --nav-item-background-active: rgb(100, 220, 120);
 }
 
 #x-nav {
     background: var(--nav-background);
-    -webkit-box-shadow: .5rem 0 1rem rgba(0, 0, 0, .25);
-            box-shadow: .5rem 0 1rem rgba(0, 0, 0, .25);
-}
-
-#x-nav {
+    box-shadow: .2rem 0 1rem rgba(0, 0, 0, .25);
     color: white;
     -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-#x-nav .nav-link, #x-nav .nav-item {
-    background-color: rgb(60, 160, 0);
+#x-nav .nav-link,
+#x-nav .nav-item {
+    flex: 0;
+    background-color: var(--nav-item-background);
     -webkit-transition: border-bottom .1s ease-in, background-color .3s ease-in 0s;
     transition: border-bottom .1s ease-in, background-color .3s ease-in 0s;
     border-bottom: 1px solid rgb(20, 60, 0);
     padding: 0.8rem 1rem;
     font-size: 1.1rem;
+    flex-shrink: 0;
+    /* width: 100%; */
 }
 
 #x-nav .nav-link:hover {
-    background-color: rgb(100, 220, 120);
+    background-color: var(--nav-item-background-active);
     border-bottom: 1px solid rgb(100, 180, 40);
 }
 
+#x-nav .nav-item>span:last-child {
+    transition: transform .2s;
+}
+
+/* 菜单高亮 */
+#x-nav .light .nav-item {
+    background-color: var(--nav-item-background-active);
+}
+
+/* 子级菜单样式 */
 #x-nav .sub-item {
     background: var(--nav-background);
     padding: 1px 0rem 0px .3rem;
 }
-#x-nav .sub-item  .nav-item {
-    padding: .45rem 1rem;
+
+/* 子级菜单 打开/关闭 样式 */
+#x-nav .sub-item.nav-item,
+#x-nav .sub-item.nav-item ul {
+    transition: visibility .3s, height .3s;
+    overflow: hidden;
+}
+
+#x-nav .sub-item.nav-item.hide,
+#x-nav .sub-item.nav-item.hide ul {
+    height: 0;
+    visibility: hidden;
+    border: none;
+    display: none;
+}
+
+/* 主体部分的配色 */
+#x-main {
+    --x-normal: rgb(0, 140, 40);
+    --x-light: rgb(0, 200, 140);
+}
+
+#x-tab-nav,
+#x-tab-nav .nav-link.active {
+    border-color: var(--x-normal);
+}
+
+#x-tab-nav .nav-link.active {
+    border-bottom-color: white;
+}
+
+#x-tab-nav .nav-link:hover {
+    border-color: var(--x-light);
+    border-bottom-color: unset;
+}
+
+#x-tab-nav .nav-link.active:hover {
+    border-color: var(--x-normal);
+    border-bottom-color: white;
 }

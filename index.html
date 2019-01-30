@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="font-size: 16px">
 
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,29 @@
 <body>
     <div class="container-fluid">
         <main id="x-main">
-
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <ul id="x-tab-nav" class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a href="#tab-home" data-toggle="tab" class="nav-link active">首页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#tab-other" data-toggle="tab" class="nav-link">其他</a>
+                                <button type="button" class="close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab-home">
+                                首页
+                            </div>
+                            <div class="tab-pane fade" id="tab-other">其他</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
         <nav id="x-nav">
             <ul class="nav flex-column ">
@@ -49,13 +71,92 @@
             </ul>
         </nav>
         <header id="x-header" class="shadow">
-
         </header>
     </div>
-    <script src="./libs/jquery-3.3.1.min.js" charset="utf-8"></script>
     <script src="./libs/d3.js" charset="utf-8"></script>
     <script src="./libs/axios.min.js" charset="utf-8"></script>
+    <script src="./libs/kute.min.js" charset="utf-8"></script>
+    <script src="./libs/kute-css.min.js" charset="utf-8"></script>
+    <script src="./libs/kute-attr.min.js" charset="utf-8"></script>
+    <script src="./libs/mobx-4.9.2.js" charset="utf-8"></script>
+
     <script src="./js/data.js" charset="utf-8"></script>
+    <script src="./js/render.js" charset="utf-8"></script>
+
+    <script src="./libs/jquery-3.3.1.min.js" charset="utf-8"></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+    <script type="x-template">
+        (function() {
+            "use strict"
+            d.columns().then(function(c) {
+                console.log(c)
+                var ul, li, span;
+                //适应节点
+                ul = d3.select("#x-nav")
+                    .selectAll("ul")
+                    .data(c);
+                ul.exit().remove();
+                ul = ul.merge(ul.enter().append("ul"));
+                // 生成栏目
+                li = ul.selectAll("li").data(function(d, i, nodes) {
+                    return d;
+                });
+                li.exit().remove();
+                li = li.merge(li.enter().append("li"))
+                li.attr("class", function(d, i, nodes) {
+                    return "nav-item " + (d instanceof Array ? "sub-item" : "nav-link");
+                });
+                // 绑定栏目字段
+                span = li.filter(function(d, i, nodes) {
+                    return !(d instanceof Array);
+                }).selectAll("span").data(function(d, i, nodes) {
+                    return [d.title, "fa fa-chevron-right"];
+                });
+                span.exit().remove();
+                span.merge(span.enter().append("span"))
+                    .text(function(d, i, nodes) {
+                        return i !== 0 ? "" : d;
+                    })
+                    .attr("class", function(d, i, nodes) {
+                        return i !== 0 ? d : "";
+                    });
+                // 绑定所有子级栏目
+                ul = li.filter(function(d, i, nodes) {
+                    return d instanceof Array;
+                }).selectAll("ul").data(function(d, i, nodes) {
+                    return d;
+                });
+                ul.exit().remove();
+                ul = ul.merge(ul.enter().append("ul"));
+                // 生成栏目
+                li = ul.selectAll("li").data(function(d, i, nodes) {
+                    console.log(d)
+                    return d;
+                });
+                li.exit().remove();
+                li = li.merge(li.enter().append("li"))
+                li.attr("class", function(d, i, nodes) {
+                    return "nav-item " + (d instanceof Array ? "sub-item" : "nav-link");
+                });
+                // 绑定栏目字段
+                span = li.filter(function(d, i, nodes) {
+                    return !(d instanceof Array);
+                }).selectAll("span").data(function(d, i, nodes) {
+                    return [d.title, "fa fa-chevron-right"];
+                });
+                span.exit().remove();
+                span.merge(span.enter().append("span"))
+                    .text(function(d, i, nodes) {
+                        return i !== 0 ? "" : d;
+                    })
+                    .attr("class", function(d, i, nodes) {
+                        return i !== 0 ? d : "";
+                    });
+            });
+
+
+        })();
+    </script>
     <script type="text/javascript">
         (function() {
             "use strict"
@@ -63,52 +164,10 @@
             // 获取所有栏目数据
             d.columns().then(function(c) {
                 // console.log(c);
-                createColumn(document.body.querySelector("#x-nav > ul"), c);
+                // createColumn(document.body.querySelector("#x-nav > ul"), c);
+                r.columns(document.body.querySelector("#x-nav > ul"), c);
+                // r.tab()
             });
-
-            // 在指定 ul 节点下插入 li 列表
-            function createColumn(ul, data) {
-                console.log([].concat(data))
-                // 遍历数据, 将下级列表展开, 以便适应 d3 渲染布局
-                for (var i = 0; i < data.length; i++) {
-                    console.log(i)
-                    if (data[i].hasOwnProperty("columns")) {
-                        console.log(JSON.stringify(data))
-                        console.log(data[i])
-                        data.splice(++i, 0, data[i].columns);
-                    }
-                }
-                console.log([].concat(data))
-                if (true) return;
-
-                // 移除当前 ul 下所有其它类型节点
-                d3.selectAll(ul.children).filter("*:not(li)").remove();
-                // 绑定所有 li 节点
-                var li = d3.selectAll(ul.children).data(data);
-                li.exit().remove();
-                var span = li.merge(li.enter().append("li"))
-                    .attr("class", function(d, index, nodes) {
-                        // return "nav-item nav-link" + d.
-                        return "nav-item " + (item.hasOwnProperty("columns") ? "sub-item" : "nav-link");
-                    })
-                    .each(function(d, index, nodes) {
-                        // 干掉所有其它节点
-                        d3.selectAll(this.children).filter("*:not(span)").remove();
-                        console.log(d)
-                    })
-                    .selectAll("span").data(function(d, index, nodes) {
-                        return d;
-                    });
-                span.exit().remove();
-                span.merge(span.enter().append("span"))
-                    .text(function(d, index, nodes) {
-                        console.log(d)
-                        return index ? "" : d;
-                    })
-                    .attr("class", function(d, index, nodes) {
-                        return index ? d : "";
-                    });
-            }
         })();
     </script>
 </body>
