@@ -64,13 +64,16 @@
 
 /* 主体部分的配色 */
 #x-main {
-    --x-normal: rgb(0, 140, 40);
+    --x-normal: rgb(220, 240, 220);
     --x-light: rgb(0, 200, 140);
+    --x-dark: rgb(0, 140, 40);
 }
-
+#x-tab-nav {
+    background-color: var(--x-normal);
+}
 #x-tab-nav,
 #x-tab-nav .nav-link.active {
-    border-color: var(--x-normal);
+    border-color: var(--x-dark);
 }
 
 #x-tab-nav .nav-link.active {
@@ -83,6 +86,6 @@
 }
 
 #x-tab-nav .nav-link.active:hover {
-    border-color: var(--x-normal);
+    border-color: var(--x-dark);
     border-bottom-color: white;
 }

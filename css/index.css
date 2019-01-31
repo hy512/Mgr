@@ -76,3 +76,20 @@
     top: 0px;
     font-size: 1.3rem;
 }
+#x-main .modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+#x-main #x-tab-content {
+  flex: 1;
+}
+
+#x-main #x-tab-content > .tab-pane {
+  /* justify-content: stretch;
+  align-items: stretch;
+  flex: 1; */
+  height: 100%;
+  width: 100%;
+  border: none;
+}

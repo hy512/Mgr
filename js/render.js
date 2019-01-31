@@ -1,7 +1,19 @@
 (function() {
     "use strict"
+    // xMain 部分的状态.
+    /* xMain: {
+        tabNavs: Array<{ - 已经打开的 tabs
+            title: string,
+            url: string,
+            closeable: boolean
+        }>
+    } */
+    var xMain = d3.local();
 
     var render = {
+        // 渲染栏目列表
+        // ul: HTMLElement - 要渲染的元素
+        // data: Array - 符合格式要求的数组
         columns: function(ul, data) {
             // 遍历数据, 将下级列表展开, 以便适应 d3 渲染布局
             for (var i = 0; i < data.length; i++) {
@@ -36,7 +48,9 @@
                 .on("touchstart click", function(d, i, nodes) { // 点击
                     // 不是下拉
                     if (d.url) {
-                        render.tab(d.title, d.url);
+                        render.tab(d.title, d.url, {
+                            closeable: true
+                        });
                         return;
                     }
                     // 展开列表
@@ -134,9 +148,142 @@
                 render.columns(this, d);
             });
         },
+
+        // 打开一个 tab 页
+        // title: string - tab 页上的标题
+        // url: string - 要打开的地址
+        /* options: {
+            closeable: boolean - 是否可关闭
+            active: boolean - 是否显示活动
+        } */
         tab: function(title, url, options) {
-            
-            console.log(title, url)
+            // 获取现在打开的页面数据
+            var xMainElement = document.querySelector("#x-main");
+            var tabNavs = null,
+                closeable = false;
+            var value = xMain.get(xMainElement);
+            if (value) tabNavs = value.tabNavs;
+            else {
+                tabNavs = [];
+                value = {};
+            }
+            // 是否可关闭
+            if (options) closeable = options.closeable;
+
+            // 调整 tabs 全部影藏, 最新加入的立即可见
+            tabNavs.forEach(function(item, index, array) {
+                if (item.active) item.active = false;
+            });
+
+            var timestamp = Date.now() + "";
+            // 加入新数据
+            tabNavs.push({
+                title: title,
+                url: url,
+                closeable: closeable,
+                active: true,
+                id: "tab-" + timestamp.substring(timestamp.length - 8, timestamp.length)
+            });
+
+
+            // 更新值
+            value.tabNavs = tabNavs;
+            xMain.set(xMainElement, value);
+            // 更新界面
+            render.tabs(
+                xMainElement.querySelector("#x-tab-nav"),
+                xMainElement.querySelector("#x-tab-content"),
+                tabNavs);
+        },
+
+        // 渲染 tabs 导航以及主体
+        // nav: HTMLElement - .nav-tabs 导航
+        // content: HTMLElement - .tab-content 内容部分
+        // data: Array - 数据数组
+        tabs: function(nav, content, data) {
+            // 生成 nav-tabs 部分
+            var li = d3.select(nav).selectAll("li").data(data);
+            li.exit().remove();
+            li = li.merge(li.enter().append("li"))
+                .attr("class", "nav-item");
+            var a = li.selectAll("a").data(function(d, i, nodes) {
+                return [d];
+            });
+            a.exit().remove();
+            a.merge(a.enter().append("a"))
+                .attr("class", function(d, i, nodes) {
+                    return "nav-link " + (d.active ? "active" : "");
+                })
+                .text(function(d, i, nodes) {
+                    return d.title;
+                })
+                .attr("href", function(d, i, nodes) {
+                    return "#" + d.id;
+                })
+                .attr("data-toggle", "tab");
+
+            var button = li.selectAll("button").data(function(d, i, nodes) {
+                return d.closeable ? [d] : [];
+            });
+            button.exit().remove();
+            button.enter()
+                .append(function(d, i, nodes) {
+                    var button = document.createElement("button");
+                    button.innerHTML = "<span aria-hidden=\"true\">&times;</span>";
+                    button.setAttribute("type", "button");
+                    button.setAttribute("class", "close");
+                    return button;
+                })
+                // 关闭 tab 的事件
+                .on("click touchstart", function(d, i, nodes) {
+                    render.tab_dismiss(d.id);
+                });
+
+            // 生成 .tab-content 部分
+            var iframe = d3.select(content).selectAll("iframe")
+                .data(data);
+            iframe.exit().remove();
+            iframe.enter()
+                .append("iframe")
+                .merge(iframe)
+                .attr("class", function(d, i, nodes) {
+                    return "tab-pane fade " + (d.active ? "show active" : "");
+                })
+                .attr("id", function(d, i, nodes) {
+                    return d.id;
+                })
+                .attr("src", function(d, i, nodes) {
+                    if (/^http/.test(d.url))
+                        return d.url;
+                    else
+                        return "http://" + d.url;
+                });
+        },
+
+        // 关闭一个 tab 导航
+        // id: string - 指定 id 的 tab
+        tab_dismiss: function(id) {
+            if (typeof id !== "string") return;
+
+            // 获取现在打开的页面数据
+            var xMainElement = document.querySelector("#x-main");
+            var value = xMain.get(xMainElement);
+            if (!value || !(value.tabNavs instanceof Array)) return;
+            var tabNavs = value.tabNavs;
+            for (var i = tabNavs.length - 1; i >= 0; i--) {
+                if (tabNavs[i].id !== id) continue;
+                // 移除数据
+                tabNavs.splice(i, 1);
+            }
+
+            // 更新值
+            value.tabNavs = tabNavs;
+            xMain.set(xMainElement, value);
+            // 更新界面
+            render.tabs(
+                xMainElement.querySelector("#x-tab-nav"),
+                xMainElement.querySelector("#x-tab-content"),
+                tabNavs);
         }
     };
 
