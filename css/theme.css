@@ -1,3 +1,9 @@
+:root {
+    --x-normal: rgb(220, 240, 220);
+    --x-light: rgb(0, 200, 140);
+    --x-dark: rgb(0, 140, 40);
+}
+
 #x-nav {
     --nav-background: linear-gradient(to bottom, rgb(0, 140, 0), rgb(20, 80, 20));
     --nav-item-background: rgb(60, 160, 0);
@@ -60,6 +66,22 @@
     visibility: hidden;
     border: none;
     display: none;
+}
+
+#x-nav-expansion {
+    background-color: var(--x-dark);
+    border-radius: 50px;
+    box-shadow: .2rem 0 1rem rgba(0, 0, 0, .25);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    color: white;
+    padding-right: 10px;
+}
+#x-nav-expansion:hover {
+    transform: translateX(-50%)!important;
+    background-color: var(--x-light);
 }
 
 /* 主体部分的配色 */

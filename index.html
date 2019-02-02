@@ -42,6 +42,9 @@
                 </div>
             </div>
         </main>
+        <div id="x-nav-expansion" class="hide">
+            <span class="fa fa-chevron-left fa-lg"></span>
+        </div>
         <nav id="x-nav">
             <ul class="nav flex-column ">
                 <li class="nav-item nav-link">
@@ -84,88 +87,23 @@
 
     <script src="./libs/jquery-3.3.1.min.js" charset="utf-8"></script>
     <script src="./libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
-    <script type="x-template">
-        (function() {
-            "use strict"
-            d.columns().then(function(c) {
-                console.log(c)
-                var ul, li, span;
-                //适应节点
-                ul = d3.select("#x-nav")
-                    .selectAll("ul")
-                    .data(c);
-                ul.exit().remove();
-                ul = ul.merge(ul.enter().append("ul"));
-                // 生成栏目
-                li = ul.selectAll("li").data(function(d, i, nodes) {
-                    return d;
-                });
-                li.exit().remove();
-                li = li.merge(li.enter().append("li"))
-                li.attr("class", function(d, i, nodes) {
-                    return "nav-item " + (d instanceof Array ? "sub-item" : "nav-link");
-                });
-                // 绑定栏目字段
-                span = li.filter(function(d, i, nodes) {
-                    return !(d instanceof Array);
-                }).selectAll("span").data(function(d, i, nodes) {
-                    return [d.title, "fa fa-chevron-right"];
-                });
-                span.exit().remove();
-                span.merge(span.enter().append("span"))
-                    .text(function(d, i, nodes) {
-                        return i !== 0 ? "" : d;
-                    })
-                    .attr("class", function(d, i, nodes) {
-                        return i !== 0 ? d : "";
-                    });
-                // 绑定所有子级栏目
-                ul = li.filter(function(d, i, nodes) {
-                    return d instanceof Array;
-                }).selectAll("ul").data(function(d, i, nodes) {
-                    return d;
-                });
-                ul.exit().remove();
-                ul = ul.merge(ul.enter().append("ul"));
-                // 生成栏目
-                li = ul.selectAll("li").data(function(d, i, nodes) {
-                    console.log(d)
-                    return d;
-                });
-                li.exit().remove();
-                li = li.merge(li.enter().append("li"))
-                li.attr("class", function(d, i, nodes) {
-                    return "nav-item " + (d instanceof Array ? "sub-item" : "nav-link");
-                });
-                // 绑定栏目字段
-                span = li.filter(function(d, i, nodes) {
-                    return !(d instanceof Array);
-                }).selectAll("span").data(function(d, i, nodes) {
-                    return [d.title, "fa fa-chevron-right"];
-                });
-                span.exit().remove();
-                span.merge(span.enter().append("span"))
-                    .text(function(d, i, nodes) {
-                        return i !== 0 ? "" : d;
-                    })
-                    .attr("class", function(d, i, nodes) {
-                        return i !== 0 ? d : "";
-                    });
-            });
-
-
-        })();
-    </script>
     <script type="text/javascript">
         (function() {
             "use strict"
 
             // 获取所有栏目数据
-            d.columns().then(function(c) {
-                // console.log(c);
-                // createColumn(document.body.querySelector("#x-nav > ul"), c);
-                r.columns(document.body.querySelector("#x-nav > ul"), c);
-                // r.tab()
+            // d.columns().then(function(c) {
+            //     // console.log(c);
+            //     // createColumn(document.body.querySelector("#x-nav > ul"), c);
+            //     r.columns(document.body.querySelector("#x-nav > ul"), c);
+            //     // r.tab()
+            // });
+            $("#x-nav").hover(function(event) {
+                var expansion = document.getElementById("x-nav-expansion");
+                expansion.setAttribute("class", "");
+            }, function(event) {
+                var expansion = document.getElementById("x-nav-expansion");
+                expansion.setAttribute("class", "hide");
             });
         })();
     </script>

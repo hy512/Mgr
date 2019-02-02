@@ -10,27 +10,29 @@
 
 #x-header {
     top: 0;
-    position: fixed;
+    position: absolute;
     left: 0;
     width: 100vw;
     height: var(--header-height);
 }
 
 #x-main {
-    position: fixed;
+    position: absolute;
     right: 0;
-    width: calc(100vw - var(--nav-width));
+    /* width: calc(100vw - var(--nav-width)); */
+    left: var(--nav-width);
     top: var(--header-height);
-    height: calc(100vh - var(--header-height));
+    bottom: 0px;
 }
 
 /* 导航目录 */
 #x-nav {
     width: var(--nav-width);
-    position: fixed;
+    position: absolute;
     left: 0;
     top: var(--header-height);
-    height: calc(100vh - var(--header-height));
+    /* height: calc(100vh - var(--header-height)); */
+    bottom: 0;
 }
 
 #x-nav>* {
@@ -55,6 +57,22 @@
 }
 
 #x-nav li.sub-item {}
+
+#x-nav-expansion.hide {
+    transform: translateX(-100%);
+}
+
+/* 导航栏的展开和关闭 */
+#x-nav-expansion {
+    transition: transform .3s ease-in, background-color .3s ease-in;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: var(--nav-width);
+    transform: translateX(-50%);
+    cursor: pointer;
+}
 
 /* 主体 */
 #x-main>.modal-dialog {

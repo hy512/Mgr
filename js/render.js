@@ -241,11 +241,17 @@
 
             // 生成 .tab-content 部分
             var iframe = d3.select(content).selectAll("iframe")
-                .data(data);
+                .data(data, function(d, i, nodes) {
+                    if (d) {
+                        return d.id;
+                    } else {
+                        return i;
+                    }
+                });
             iframe.exit().remove();
             iframe.enter()
                 .append("iframe")
-                .merge(iframe)
+                // .merge(iframe.filter(function(d, i, )))
                 .attr("class", function(d, i, nodes) {
                     return "tab-pane fade " + (d.active ? "show active" : "");
                 })
