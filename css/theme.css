@@ -79,9 +79,17 @@
     color: white;
     padding-right: 10px;
 }
+
 #x-nav-expansion:hover {
     transform: translateX(-50%)!important;
     background-color: var(--x-light);
+}
+
+#x-nav-expansion span {
+    transition: transform .25s ease-in-out;
+}
+#x-nav-expansion span.hide {
+    transform: rotate(180deg);
 }
 
 /* 主体部分的配色 */
