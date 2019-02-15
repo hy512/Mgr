@@ -35,5 +35,5 @@ var interactive = (function($, nav, expansion) {
     // 收起导航面板
     $expansion.on("click touchstart", navExpansion);
 
-    return { navExpansion };
+    return { navExpansion: navExpansion };
 })($, document.getElementById("x-nav"), document.getElementById("x-nav-expansion"));

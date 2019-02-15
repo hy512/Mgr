@@ -264,6 +264,9 @@
                     else
                         return "http://" + d.url;
                 });
+            iframe.attr("class", function(d, i, nodes) {
+                return "tab-pane fade " + (d.active ? "show active" : "");
+            });
         },
 
         // 关闭一个 tab 导航
